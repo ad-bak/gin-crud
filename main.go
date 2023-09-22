@@ -3,6 +3,7 @@ package main
 import (
 	"crud/config"
 	"crud/controller"
+	_ "crud/docs"
 	"crud/helper"
 	"crud/model"
 	"crud/repository"
@@ -10,6 +11,7 @@ import (
 	"crud/service"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/go-playground/validator/v10"
 	"github.com/rs/zerolog/log"
 )
@@ -40,6 +42,11 @@ func main() {
 
 	// Router
 	routes := router.NewRouter(tagsController)
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true // This allows all origins
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
+	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type"}
+	routes.Use(cors.New(config))
 
 	server := &http.Server{
 		Addr:    ":8080",
